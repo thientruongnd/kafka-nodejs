@@ -1,0 +1,30 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      # Cổng mà Zookeeper sẽ lắng nghe (2181 là mặc định)
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      # Định danh duy nhất cho broker
+      KAFKA_BROKER_ID: 1
+      # Kết nối tới Zookeeper (sử dụng tên service của Zookeeper)
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # Kafka sẽ lắng nghe trên tất cả các interface trong container
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      # Thông báo cho client bên ngoài sử dụng "localhost:9092" để kết nối
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      # Để tạo topic offsets, cần thiết lập replication factor
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
