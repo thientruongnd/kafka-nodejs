@@ -1,3 +1,8 @@
+/**
+ * Created by Truong on 10/08/23.
+ * truongdx@runsystem.net - Xuan Truong
+ * Function Name
+ * */
 const express = require('express');
 const { producer } = require('./kafka');
 
